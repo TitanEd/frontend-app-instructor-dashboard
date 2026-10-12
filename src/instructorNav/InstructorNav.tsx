@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { getSiteConfig } from '@openedx/frontend-base';
 import { Nav, Navbar, Skeleton } from '@openedx/paragon';
 import { useAlert } from '@src/providers/AlertProvider';
 import { useAccessError } from '@src/providers/AccessErrorProvider';
@@ -27,6 +28,9 @@ const InstructorNav = () => {
   };
 
   const hasError = errorType !== null;
+  const communicationsUrl = (
+    getSiteConfig().commonAppConfig?.COMMUNICATIONS_MICROFRONTEND_URL as string | undefined
+  )?.replace(/\/+$/, '');
 
   const sortedTabs = useMemo(() => {
     if (isLoading || hasError) return [];
@@ -68,7 +72,12 @@ const InstructorNav = () => {
         <Navbar.Toggle aria-controls="instructor-nav" />
         <Navbar.Collapse id="instructor-nav">
           {
-            sortedTabs.map((tab) => {
+            sortedTabs.map((sortedTab) => {
+              // "Bulk Email" is a page of the communications MFE, not of this app: without its
+              // address the tab would open "Page not found".
+              const tab = sortedTab.tabId === 'bulk_email' && communicationsUrl
+                ? { ...sortedTab, url: `${communicationsUrl}/courses/${courseId}/bulkemail` }
+                : sortedTab;
               const isInternal = tab.url.startsWith('/');
               return (
                 <Nav.Item key={tab.tabId}>

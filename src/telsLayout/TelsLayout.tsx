@@ -17,6 +17,8 @@ import { Home, LmsBook } from '@openedx/paragon/icons';
 import { useLocation } from 'react-router-dom';
 import { MainHeader, Sidebar, SidebarProvider } from './vendor/titaned-frontend-library';
 
+import CourseHeader from './CourseHeader';
+import CourseTabsExtras from './CourseTabsExtras';
 import HeaderExtras, { currentThemeVariant, headerUser, UserMenuResponse } from './HeaderExtras';
 import messages from './messages';
 
@@ -75,6 +77,8 @@ const TelsLayout = () => {
   const location = useLocation();
   const authenticatedUser = useAuthenticatedUser();
   const siteConfig = getSiteConfig();
+  // /instructor-dashboard/<course id>/<page>
+  const courseId = decodeURIComponent(location.pathname.split('/').find((part) => /^course-v1(:|%3A)/i.test(part)) ?? '');
 
   const [loadingSidebar, setLoadingSidebar] = useState(true);
   const [menuConfig, setMenuConfig] = useState<MenuConfig>({});
@@ -159,16 +163,23 @@ const TelsLayout = () => {
                 onNavigate={(path: string) => {
                   window.location.href = learnerDashboardUrl(path);
                 }}
-                presentPath={location.pathname}
+                // A course page: "My Courses" is the current entry, as in the Learning MFE.
+                presentPath={courseId ? '/my-courses' : location.pathname}
               />
             )}
           </div>
           <div className="main-content">
             <div className="page-content">
+              {/* As on the Course and Progress tabs of the Learning MFE: the masquerade bar
+                  spans the page; breadcrumb, title, course tabs and content share one column. */}
               <Slot id="org.openedx.frontend.slot.header.masqueradeBar.v1" />
-              <Slot id="org.openedx.frontend.slot.header.courseNavigationBar.v1" />
-              <div id="main-content">
-                <Slot id="org.openedx.frontend.slot.content.main.v1" layout={DefaultMain} />
+              <div className="tels-page-column">
+                <CourseHeader courseId={courseId} myCoursesUrl={learnerDashboardUrl('/my-courses')} />
+                <Slot id="org.openedx.frontend.slot.header.courseNavigationBar.v1" />
+                <CourseTabsExtras />
+                <div id="main-content">
+                  <Slot id="org.openedx.frontend.slot.content.main.v1" layout={DefaultMain} />
+                </div>
               </div>
             </div>
             <Slot id="org.openedx.frontend.slot.footer.main.v1" />

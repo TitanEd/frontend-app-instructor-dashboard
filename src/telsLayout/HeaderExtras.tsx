@@ -148,6 +148,20 @@ const HeaderExtras = () => {
       if (logoImage && darkLogo && currentThemeVariant() === 'dark' && logoImage.getAttribute('src') !== darkLogo) {
         logoImage.setAttribute('src', darkLogo);
       }
+      // The library writes alt="Logo" and "Toggle Sidebar" in English, and index.html says
+      // lang="en-us" whatever the language: give all three the language of the page.
+      const logoAlt = intl.formatMessage(messages.logoAlt, { siteName: getSiteConfig().siteName });
+      if (logoImage && logoImage.getAttribute('alt') !== logoAlt) {
+        logoImage.setAttribute('alt', logoAlt);
+      }
+      const sidebarButton = document.querySelector('.header-container .toggle-sidebar-icon button');
+      const sidebarLabel = intl.formatMessage(messages.toggleSidebar);
+      if (sidebarButton && sidebarButton.getAttribute('aria-label') !== sidebarLabel) {
+        sidebarButton.setAttribute('aria-label', sidebarLabel);
+      }
+      if (intl.locale && document.documentElement.lang !== intl.locale) {
+        document.documentElement.lang = intl.locale;
+      }
       // The library draws the logo as a <nav href="/"> element, which is not a link.
       const logo = document.querySelector<HTMLElement>('.header-container .navbar-brand');
       if (logo && logo.dataset.telsHome !== homeUrl) {

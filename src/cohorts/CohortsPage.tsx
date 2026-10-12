@@ -55,14 +55,14 @@ const CohortsPageContent = () => {
 
   return (
     <>
-      <div className="d-inline-flex align-items-center">
+      <div className="d-flex align-items-center gap-2 cohorts-title">
         <h3 className="mb-0 text-primary-700">{intl.formatMessage(messages.cohortsTitle)}</h3>
         {isCohorted && (
-          <div className="small">
+          <div>
             <IconButton
               alt={intl.formatMessage(messages.disableCohorts)}
               iconAs={Settings}
-              iconClassNames="mb-2 text-gray-500"
+              iconClassNames="text-gray-500"
               size="sm"
               variant="secondary"
               onClick={() => setIsOpenDisableModal(true)}

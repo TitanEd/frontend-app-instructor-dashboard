@@ -6,17 +6,17 @@ import { FormattedDate, useIntl } from '@openedx/frontend-base';
 import { useCallback } from 'react';
 import messages from './messages';
 
-const COURSE_STATUS = {
-  ACTIVE: 'Active',
-  ARCHIVED: 'Archived',
-  UPCOMING: 'Upcoming',
-};
 
 const GeneralCourseInfo = () => {
   const intl = useIntl();
   const { courseId = '' } = useParams();
   const { data: courseInfo, isLoading } = useCourseInfo(courseId);
   const NOT_SET_FALLBACK = intl.formatMessage(messages.courseInfoNotSetFallback);
+  const COURSE_STATUS = {
+    ACTIVE: intl.formatMessage(messages.courseStatusActive),
+    ARCHIVED: intl.formatMessage(messages.courseStatusArchived),
+    UPCOMING: intl.formatMessage(messages.courseStatusUpcoming),
+  };
 
   const getCourseStatus = useCallback((courseInfo) => {
     if (!courseInfo || (courseInfo.hasStarted === undefined && courseInfo.hasEnded === undefined)) return NOT_SET_FALLBACK;
@@ -24,7 +24,7 @@ const GeneralCourseInfo = () => {
     if (courseInfo.hasStarted && !courseInfo.hasEnded) return COURSE_STATUS.ACTIVE;
     if (courseInfo.hasStarted && courseInfo.hasEnded) return COURSE_STATUS.ARCHIVED;
     return NOT_SET_FALLBACK;
-  }, [NOT_SET_FALLBACK]);
+  }, [NOT_SET_FALLBACK, COURSE_STATUS.ACTIVE, COURSE_STATUS.ARCHIVED, COURSE_STATUS.UPCOMING]);
 
   const renderDate = (date: string | null) => {
     if (!date) return NOT_SET_FALLBACK;

@@ -33,6 +33,26 @@ const messages = defineMessages({
     defaultMessage: 'Switch to light mode',
     description: 'Label of the header button that turns light mode on',
   },
+  bookmarksTab: {
+    id: 'learning.custom.tabs.bookmarks',
+    defaultMessage: 'Bookmarks',
+    description: 'Course tab that opens the bookmarks page of the Learning MFE',
+  },
+  updatesTab: {
+    id: 'learning.custom.tabs.updates',
+    defaultMessage: 'Updates',
+    description: 'Course tab that opens the course updates page of the Learning MFE',
+  },
+  toggleSidebar: {
+    id: 'tels.header.sidebar.toggle',
+    defaultMessage: 'Toggle sidebar',
+    description: 'Accessible name of the header button that opens and closes the left navigation',
+  },
+  logoAlt: {
+    id: 'tels.header.logo.named',
+    defaultMessage: '{siteName} logo',
+    description: 'Text alternative of the logo in the header. {siteName} is the name of the platform.',
+  },
 });
 
 export default messages;

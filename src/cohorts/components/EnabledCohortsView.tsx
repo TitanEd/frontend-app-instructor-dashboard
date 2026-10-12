@@ -106,7 +106,7 @@ const EnabledCohortsView = () => {
 
   return (
     <>
-      <div className="d-flex mt-4.5">
+      <div className="d-flex flex-wrap flex-md-nowrap gap-3 mt-4 cohorts-selector">
         <FormControl
           as="select"
           disabled={displayAddForm || cohortsList.length === 1}
@@ -123,7 +123,7 @@ const EnabledCohortsView = () => {
             ))
           }
         </FormControl>
-        <Button onClick={handleAddCohort} disabled={displayAddForm}>+ {intl.formatMessage(messages.addCohort)}</Button>
+        <Button className="flex-shrink-0" onClick={handleAddCohort} disabled={displayAddForm}>+ {intl.formatMessage(messages.addCohort)}</Button>
       </div>
       {alerts.map(alert => (
         <Alert
