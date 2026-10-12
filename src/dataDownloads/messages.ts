@@ -337,6 +337,11 @@ const messages = defineMessages({
     defaultMessage: 'No reports found',
     description: 'Message displayed when no reports are found in the data downloads table',
   },
+  okButton: {
+    id: 'instruct.dataDownloads.modal.ok',
+    defaultMessage: 'OK',
+    description: 'Label of the button that closes an error dialog on the data downloads page',
+  },
 });
 
 export default messages;

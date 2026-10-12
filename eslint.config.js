@@ -14,6 +14,7 @@ module.exports = createLintConfig(
       'coverage/*',
       'dist/*',
       'node_modules/*',
+      'src/telsLayout/vendor/*',
     ],
   },
 );

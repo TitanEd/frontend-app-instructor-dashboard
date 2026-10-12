@@ -92,7 +92,7 @@ const CertificatesPage = () => {
             const errorMessages = data.errors.map(err => `${err.learner}: ${err.message}`).join('\n');
             showModal({
               title: intl.formatMessage(messages.errorModalTitle),
-              message: `Some exceptions failed:\n${errorMessages}`,
+              message: intl.formatMessage(messages.someExceptionsFailed, { errors: errorMessages }),
               variant: ALERT_VARIANTS.WARNING,
             });
           }
@@ -121,7 +121,7 @@ const CertificatesPage = () => {
             const errorMessages = data.errors.map(err => `${err.learner}: ${err.message}`).join('\n');
             showModal({
               title: intl.formatMessage(messages.errorModalTitle),
-              message: `Some exceptions failed:\n${errorMessages}`,
+              message: intl.formatMessage(messages.someExceptionsFailed, { errors: errorMessages }),
               variant: ALERT_VARIANTS.WARNING,
             });
           }
@@ -150,7 +150,7 @@ const CertificatesPage = () => {
             const errorMessages = data.errors.map(err => `${err.learner}: ${err.message}`).join('\n');
             showModal({
               title: intl.formatMessage(messages.errorModalTitle),
-              message: `Some invalidations failed:\n${errorMessages}`,
+              message: intl.formatMessage(messages.someInvalidationsFailed, { errors: errorMessages }),
               variant: ALERT_VARIANTS.WARNING,
               confirmText: intl.formatMessage(messages.close),
             });

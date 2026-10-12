@@ -53,6 +53,8 @@ clean:
 build:
 	tsc --project tsconfig.build.json
 	tsc-alias -p tsconfig.build.json
+	# The copied titaned-frontend-library bundle (src/telsLayout/vendor) is not compiled: copy it as it is.
+	mkdir -p dist/telsLayout && cp -R src/telsLayout/vendor dist/telsLayout/
 	find src -type f -name '*.scss' -exec sh -c '\
 	  for f in "$$@"; do \
 	    d="dist/$${f#src/}"; \

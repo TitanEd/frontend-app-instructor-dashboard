@@ -112,7 +112,7 @@ const DataDownloadsPage = () => {
         title: intl.formatMessage(messages.downloadReportError),
         message: intl.formatMessage(messages.downloadReportError),
         variant: 'danger',
-        confirmText: 'OK',
+        confirmText: intl.formatMessage(messages.okButton),
       });
     }
   }, [intl, showModal]);
@@ -136,7 +136,7 @@ const DataDownloadsPage = () => {
             title: intl.formatMessage(messages.generateReportError),
             message: errorMessage,
             variant: 'danger',
-            confirmText: 'OK',
+            confirmText: intl.formatMessage(messages.okButton),
           });
         }
       }

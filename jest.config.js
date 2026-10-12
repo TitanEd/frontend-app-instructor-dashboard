@@ -8,6 +8,7 @@ module.exports = createConfig('test', {
     'src/setupTest.js',
     'src/i18n',
     'src/__mocks__',
+    'src/telsLayout/vendor',
   ],
   moduleNameMapper: {
     // This alias is for any code in the src directory that wants to avoid '../../' style relative imports:

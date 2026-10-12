@@ -381,6 +381,16 @@ const messages = defineMessages({
     defaultMessage: 'No certificate generation tasks found',
     description: 'Message when no tasks are found',
   },
+  someExceptionsFailed: {
+    id: 'instruct.certificates.someExceptionsFailed',
+    defaultMessage: 'Some exceptions failed:\n{errors}',
+    description: 'Warning shown when certificate exceptions could not be granted for some learners; {errors} is one line per learner',
+  },
+  someInvalidationsFailed: {
+    id: 'instruct.certificates.someInvalidationsFailed',
+    defaultMessage: 'Some invalidations failed:\n{errors}',
+    description: 'Warning shown when certificates could not be invalidated for some learners; {errors} is one line per learner',
+  },
   errorGrantException: {
     id: 'instruct.certificates.errorGrantException',
     defaultMessage: 'Failed to grant exceptions',
