@@ -13,7 +13,9 @@ import {
   DefaultMain, getAuthenticatedHttpClient, getSiteConfig, Slot, useAuthenticatedUser, useIntl,
 } from '@openedx/frontend-base';
 import { Spinner } from '@openedx/paragon';
-import { Home, LmsBook } from '@openedx/paragon/icons';
+import {
+  Assignment, EmojiEvents, Home, LmsBook,
+} from '@openedx/paragon/icons';
 import { useLocation } from 'react-router-dom';
 import { MainHeader, Sidebar, SidebarProvider } from './vendor/titaned-frontend-library';
 
@@ -118,6 +120,8 @@ const TelsLayout = () => {
   const sidebarItems = [
     { label: intl.formatMessage(messages.sidebarDashboardTitle), path: '/', icon: <Home /> },
     { label: intl.formatMessage(messages.sidebarMyCoursesTitle), path: '/my-courses', icon: <LmsBook /> },
+    { label: intl.formatMessage(messages.sidebarMyAssessmentsTitle), path: '/assessments', icon: <Assignment /> },
+    { label: intl.formatMessage(messages.sidebarMyAchievementsTitle), path: '/achievements', icon: <EmojiEvents /> },
   ];
 
   // Items come from the user-dropdown-menu API (control-hub); without it only "Logout" is left.
