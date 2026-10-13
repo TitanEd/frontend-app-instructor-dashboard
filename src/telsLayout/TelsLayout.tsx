@@ -65,6 +65,19 @@ const fetchMenuConfig = async (): Promise<MenuConfig> => {
   }
 };
 
+// Which of the features sold on top of the base platform this site has (control-hub
+// subscription/features.py). Unknown or unreachable: none of them is shown.
+type SiteFeatures = Record<string, boolean>;
+
+const fetchSiteFeatures = async (): Promise<SiteFeatures> => {
+  try {
+    const { data } = await getAuthenticatedHttpClient().get(`${getSiteConfig().lmsBaseUrl}/titaned/api/v2/features/`);
+    return (data || {}) as SiteFeatures;
+  } catch {
+    return {};
+  }
+};
+
 const fetchUserMenu = async (): Promise<UserMenuResponse> => {
   try {
     const { data } = await getAuthenticatedHttpClient().get(`${getSiteConfig().lmsBaseUrl}/titaned/api/v1/user-dropdown-menu/`);
@@ -85,6 +98,13 @@ const TelsLayout = () => {
   const [loadingSidebar, setLoadingSidebar] = useState(true);
   const [menuConfig, setMenuConfig] = useState<MenuConfig>({});
   const [userMenu, setUserMenu] = useState<UserMenuResponse>({});
+  const [siteFeatures, setSiteFeatures] = useState<SiteFeatures>({});
+
+  useEffect(() => {
+    let mounted = true;
+    fetchSiteFeatures().then((data) => { if (mounted) { setSiteFeatures(data); } });
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     // The brand CSS (tels-brand-openedx) keys its dark-mode rules on the attribute the legacy
@@ -120,8 +140,12 @@ const TelsLayout = () => {
   const sidebarItems = [
     { label: intl.formatMessage(messages.sidebarDashboardTitle), path: '/', icon: <Home /> },
     { label: intl.formatMessage(messages.sidebarMyCoursesTitle), path: '/my-courses', icon: <LmsBook /> },
-    { label: intl.formatMessage(messages.sidebarMyAssessmentsTitle), path: '/assessments', icon: <Assignment /> },
-    { label: intl.formatMessage(messages.sidebarMyAchievementsTitle), path: '/achievements', icon: <EmojiEvents /> },
+    ...(siteFeatures.assessment_center
+      ? [{ label: intl.formatMessage(messages.sidebarMyAssessmentsTitle), path: '/assessments', icon: <Assignment /> }]
+      : []),
+    ...(siteFeatures.gamification
+      ? [{ label: intl.formatMessage(messages.sidebarMyAchievementsTitle), path: '/achievements', icon: <EmojiEvents /> }]
+      : []),
   ];
 
   // Items come from the user-dropdown-menu API (control-hub); without it only "Logout" is left.
