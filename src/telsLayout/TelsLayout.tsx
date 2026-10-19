@@ -14,7 +14,7 @@ import {
 } from '@openedx/frontend-base';
 import { Spinner } from '@openedx/paragon';
 import {
-  Assignment, EmojiEvents, Home, LmsBook,
+  Assignment, Calendar, EmojiEvents, Home, LmsBook, VideoCall,
 } from '@openedx/paragon/icons';
 import { useLocation } from 'react-router-dom';
 import { MainHeader, Sidebar, SidebarProvider } from './vendor/titaned-frontend-library';
@@ -142,6 +142,12 @@ const TelsLayout = () => {
     { label: intl.formatMessage(messages.sidebarMyCoursesTitle), path: '/my-courses', icon: <LmsBook /> },
     ...(siteFeatures.assessment_center
       ? [{ label: intl.formatMessage(messages.sidebarMyAssessmentsTitle), path: '/assessments', icon: <Assignment /> }]
+      : []),
+    ...(siteFeatures.zoom_integration
+      ? [{ label: intl.formatMessage(messages.sidebarMyMeetingsTitle), path: '/meetings', icon: <VideoCall /> }]
+      : []),
+    ...(siteFeatures.calendar
+      ? [{ label: intl.formatMessage(messages.sidebarMyCalendarTitle), path: '/calendar', icon: <Calendar /> }]
       : []),
     ...(siteFeatures.gamification
       ? [{ label: intl.formatMessage(messages.sidebarMyAchievementsTitle), path: '/achievements', icon: <EmojiEvents /> }]
