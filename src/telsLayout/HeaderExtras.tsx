@@ -5,8 +5,9 @@
  *  - headerUser(): the name and picture the header shows (full name and profile picture from
  *    the user-dropdown-menu API of control-hub).
  *  - <HeaderExtras />: the notification bell and the light / dark mode switch, placed next to
- *    the user menu, the styles that put the profile picture before the name, and the logo link
- *    to the site's home page (LMS).
+ *    the user menu, the styles that put the profile picture before the name, the logo link
+ *    to the site's home page (LMS), and the site's announcements for course teams above the
+ *    page (Control Hub -> Configuration -> Announcements).
  *
  * The notification bell is the one the site already has: the widget the notifications app
  * (@openedx/frontend-app-notifications) registers for the stock header. When that app is not
@@ -112,6 +113,111 @@ const NotificationsBell = () => {
   return null;
 };
 
+interface Announcement {
+  id: number,
+  version: number,
+  title: string,
+  message: string,
+  severity: string,
+  dismissible: boolean,
+}
+
+const CLOSED_ANNOUNCEMENTS = 'tels-announcements-closed';
+// Same look as the other forks (customHeaderExtras.jsx, HEADER_EXTRAS_STYLE).
+const ANNOUNCEMENT_STYLE = `
+  .tels-announcements { display: grid; gap: 1px; }
+  .tels-announcement {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    padding: .6rem 1rem; font-size: 1rem; line-height: 1.5;
+    color: var(--pgn-color-gray-900, #1f2933);
+    background: var(--pgn-color-info-100, #e6f2fb);
+    border-inline-start: 4px solid var(--pgn-color-info-500, #0b6fbf);
+  }
+  .tels-announcement--success { background: var(--pgn-color-success-100, #e4f5ec); border-color: var(--pgn-color-success-500, #18794e); }
+  .tels-announcement--warning { background: var(--pgn-color-warning-100, #fdf2dc); border-color: var(--pgn-color-warning-500, #a15c07); }
+  .tels-announcement--critical { background: var(--pgn-color-danger-100, #fdebe6); border-color: var(--pgn-color-danger-500, #c4320a); }
+  .tels-announcement__text { min-width: 0; overflow-wrap: anywhere; }
+  .tels-announcement__text p { display: inline; margin: 0; }
+  .tels-announcement__text a { color: inherit; text-decoration: underline; }
+  .tels-announcement__close {
+    flex: none; border: 0; background: transparent; color: inherit; font-size: 1.5rem; line-height: 1;
+    padding: 0 .25rem; cursor: pointer;
+  }
+  .tels-announcement__close:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+`;
+
+const closedAnnouncements = (): string[] => {
+  try {
+    return JSON.parse(window.localStorage.getItem(CLOSED_ANNOUNCEMENTS) || '[]');
+  } catch (error) {
+    return [];
+  }
+};
+
+/** The site's announcements for course teams, above the page (one closed stays closed until changed). */
+const Announcements = () => {
+  const intl = useIntl();
+  const [items, setItems] = useState<Announcement[]>([]);
+  const [host, setHost] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (window.top !== window.self) {
+      return undefined;
+    }
+    const element = document.createElement('div');
+    element.className = 'tels-announcements';
+    document.body.insertBefore(element, document.body.firstChild);
+    setHost(element);
+    const closed = closedAnnouncements();
+    fetch(`${getSiteConfig().lmsBaseUrl}/titaned/api/v1/system/alerts/?audience=course_teams`)
+      .then((response) => (response.ok ? response.json() : {}))
+      .then((data: { announcements?: Announcement[] }) => setItems((data.announcements || []).filter(
+        (item) => !closed.includes(`${item.id}:${item.version}`),
+      )))
+      .catch(() => {});
+    return () => element.remove();
+  }, []);
+
+  const close = (item: Announcement) => {
+    try {
+      const keep = closedAnnouncements().slice(-50);
+      window.localStorage.setItem(CLOSED_ANNOUNCEMENTS, JSON.stringify([...keep, `${item.id}:${item.version}`]));
+    } catch (error) {
+      // storage blocked: closed for this page only
+    }
+    setItems((current) => current.filter((other) => other.id !== item.id));
+  };
+
+  if (!host || !items.length) {
+    return null;
+  }
+  return createPortal(
+    <>
+      <style>{ANNOUNCEMENT_STYLE}</style>
+      {items.map((item) => (
+        <div key={item.id} className={`tels-announcement tels-announcement--${item.severity}`} role="status">
+          <div className="tels-announcement__text">
+            {item.title && <strong>{item.title} </strong>}
+            {/* The message is cleaned of unsafe HTML by the LMS (alerts.views.announcement_payload). */}
+            <span dangerouslySetInnerHTML={{ __html: item.message }} />
+          </div>
+          {item.dismissible && (
+            <button
+              type="button"
+              className="tels-announcement__close"
+              aria-label={intl.formatMessage(messages.closeAnnouncement)}
+              onClick={() => close(item)}
+            >
+              ×
+            </button>
+          )}
+        </div>
+      ))}
+    </>,
+    host,
+  );
+};
+
 const HeaderExtras = () => {
   const intl = useIntl();
   const [host, setHost] = useState<HTMLElement | null>(null);
@@ -200,20 +306,25 @@ const HeaderExtras = () => {
   };
 
   const label = intl.formatMessage(variant === 'dark' ? messages.switchToLight : messages.switchToDark);
-  return host && createPortal(
+  return (
     <>
-      <NotificationsBell />
-      <IconButton
-        className="tels-theme-toggle"
-        src={variant === 'dark' ? WbSunny : Nightlight}
-        iconAs={Icon}
-        alt={label}
-        title={label}
-        variant="primary"
-        onClick={toggle}
-      />
-    </>,
-    host,
+      <Announcements />
+      {host && createPortal(
+        <>
+          <NotificationsBell />
+          <IconButton
+            className="tels-theme-toggle"
+            src={variant === 'dark' ? WbSunny : Nightlight}
+            iconAs={Icon}
+            alt={label}
+            title={label}
+            variant="primary"
+            onClick={toggle}
+          />
+        </>,
+        host,
+      )}
+    </>
   );
 };
 

@@ -68,6 +68,11 @@ const messages = defineMessages({
     defaultMessage: 'Toggle sidebar',
     description: 'Accessible name of the header button that opens and closes the left navigation',
   },
+  closeAnnouncement: {
+    id: 'tels.header.announcement.close',
+    defaultMessage: 'Close announcement',
+    description: 'Accessible name of the button that closes the announcement banner above the header',
+  },
   logoAlt: {
     id: 'tels.header.logo.named',
     defaultMessage: '{siteName} logo',
