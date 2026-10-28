@@ -1,6 +1,6 @@
 import { getExternalLinkUrl, useIntl } from '@openedx/frontend-base';
-import { useParams } from 'react-router-dom';
-import { Collapsible, Hyperlink } from '@openedx/paragon';
+import { Link, useParams } from 'react-router-dom';
+import { Collapsible } from '@openedx/paragon';
 import CSVComponent from '@src/components/CSVComponent';
 import dataDownloadsMessages from '@src/dataDownloads/messages';
 import { useAlert } from '@src/providers/AlertProvider';
@@ -43,11 +43,11 @@ const SelectedCohortInfo = () => {
   return (
     <>
       <CohortCard />
-      <Collapsible className="collapsible-csv mt-3 w-50" styling="basic" title={<p className="text-info-500 mb-0">{intl.formatMessage(messages.downloadCSVCaption)}</p>}>
+      <Collapsible className="collapsible-csv mt-3 w-50" styling="basic" title={<p className="text-primary mb-0">{intl.formatMessage(messages.downloadCSVCaption)}</p>}>
         <CSVComponent templateLink={getExternalLinkUrl('https://docs.openedx.org/en/latest/educators/how-tos/advanced_features/manage_cohorts.html#assign-learners-to-cohorts-by-uploading-a-csv-file')} onProcessUpload={handleProcessUpload} />
       </Collapsible>
       <p className="mt-3">
-        {intl.formatMessage(messages.cohortDisclaimer)} <Hyperlink className="text-info-500 text-decoration-none" destination={`/instructor/${courseId}/data_downloads`} showLaunchIcon={false}>{intl.formatMessage(dataDownloadsMessages.pageTitle)}</Hyperlink> {intl.formatMessage(messages.page)}
+        {intl.formatMessage(messages.cohortDisclaimer)} <Link className="pgn__hyperlink" to="../data_downloads" relative="path">{intl.formatMessage(dataDownloadsMessages.pageTitle)}</Link> {intl.formatMessage(messages.page)}
       </p>
     </>
   );

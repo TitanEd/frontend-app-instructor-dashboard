@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import dataDownloadsMessages from '@src/dataDownloads/messages';
 import { renderWithAlertAndIntl } from '@src/testUtils';
 import * as CohortContextModule from '@src/cohorts/components/CohortContext';
@@ -51,9 +52,11 @@ jest.mock('@src/cohorts/data/apiHook', () => ({
 
 function renderWithProviders() {
   return renderWithAlertAndIntl(
-    <CohortProvider>
-      <SelectedCohortInfo />
-    </CohortProvider>
+    <MemoryRouter initialEntries={['/course-v1:edX+DemoX+Demo_Course/cohorts']}>
+      <CohortProvider>
+        <SelectedCohortInfo />
+      </CohortProvider>
+    </MemoryRouter>
   );
 }
 
@@ -85,7 +88,7 @@ describe('SelectedCohortInfo', () => {
       renderWithProviders();
       const link = screen.getByRole('link', { name: dataDownloadsMessages.pageTitle.defaultMessage });
       expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', '/instructor/course-v1:edX+DemoX+Demo_Course/data_downloads');
+      expect(link).toHaveAttribute('href', '/course-v1:edX+DemoX+Demo_Course/data_downloads');
     });
 
     it('renders complete disclaimer paragraph with correct structure', () => {
