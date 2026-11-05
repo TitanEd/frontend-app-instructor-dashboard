@@ -70,12 +70,19 @@ const ManageLearners = () => {
   const handleAddLearners = () => {
     clearAlerts();
     const usersArray = users.split(/[\n,]+/).map(u => u.trim()).filter(Boolean);
+    if (usersArray.length === 0) {
+      addAlert({
+        type: 'error',
+        message: intl.formatMessage(messages.addLearnersEmptyMessage)
+      });
+      return;
+    }
     addLearnersToCohort(usersArray, {
       onSuccess: handleAlertMessages,
       onError: (error) => {
         addAlert({
           type: 'error',
-          message: intl.formatMessage(messages.addLearnersErrorMessage)
+          message: intl.formatMessage(messages.addLearnersRequestFailedMessage)
         });
         console.error(error);
       }

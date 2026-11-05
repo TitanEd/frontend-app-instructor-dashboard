@@ -79,17 +79,18 @@ describe('ManageLearners', () => {
     );
   });
 
-  it('handles empty input gracefully', async () => {
+  it.each(['', '   ', ' , \n '])('asks for learners instead of calling the API when the input is %j', async (value) => {
     renderWithAlertProvider();
     const user = userEvent.setup();
+    if (value) {
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), value);
+    }
     await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
-    expect(mutateMock).toHaveBeenCalledWith(
-      [],
-      expect.objectContaining({
-        onSuccess: expect.any(Function),
-        onError: expect.any(Function),
-      })
-    );
+    expect(mutateMock).not.toHaveBeenCalled();
+    expect(addAlertMock).toHaveBeenCalledWith({
+      type: 'error',
+      message: messages.addLearnersEmptyMessage.defaultMessage
+    });
   });
 
   it('calls onError if mutate fails and shows error alert', async () => {
@@ -106,7 +107,7 @@ describe('ManageLearners', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('error!');
     expect(addAlertMock).toHaveBeenCalledWith({
       type: 'error',
-      message: messages.addLearnersErrorMessage.defaultMessage
+      message: messages.addLearnersRequestFailedMessage.defaultMessage
     });
     consoleErrorSpy.mockRestore();
   });
@@ -115,6 +116,7 @@ describe('ManageLearners', () => {
     (useCohortContext as jest.Mock).mockReturnValue({ selectedCohort: undefined });
     renderWithAlertProvider();
     const user = userEvent.setup();
+    await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
     await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
     expect(mutateMock).toHaveBeenCalled();
   });
@@ -167,6 +169,7 @@ describe('ManageLearners', () => {
     it('shows warning alert for preassigned learners', async () => {
       renderWithAlertProvider();
       const user = userEvent.setup();
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
       await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
 
       const callArgs = mutateMock.mock.calls[0][1];
@@ -190,6 +193,7 @@ describe('ManageLearners', () => {
     it('shows success alert for added and changed learners', async () => {
       renderWithAlertProvider();
       const user = userEvent.setup();
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
       await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
 
       const callArgs = mutateMock.mock.calls[0][1];
@@ -213,6 +217,7 @@ describe('ManageLearners', () => {
     it('shows error alert for unknown learners', async () => {
       renderWithAlertProvider();
       const user = userEvent.setup();
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
       await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
 
       const callArgs = mutateMock.mock.calls[0][1];
@@ -236,6 +241,7 @@ describe('ManageLearners', () => {
     it('shows multiple alerts for mixed response types', async () => {
       renderWithAlertProvider();
       const user = userEvent.setup();
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
       await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
 
       const callArgs = mutateMock.mock.calls[0][1];
@@ -277,6 +283,7 @@ describe('ManageLearners', () => {
     it('does not show alerts when response arrays are empty', async () => {
       renderWithAlertProvider();
       const user = userEvent.setup();
+      await user.type(screen.getByPlaceholderText(messages.learnersExample.defaultMessage), 'user@example.com');
       await user.click(screen.getByRole('button', { name: /\+ Add Learners/i }));
 
       const callArgs = mutateMock.mock.calls[0][1];

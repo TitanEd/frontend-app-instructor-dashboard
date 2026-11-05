@@ -20,7 +20,7 @@ describe('DisabledCohortsView', () => {
     renderWithIntl(<DisabledCohortsView onEnableCohorts={onEnableCohorts} />);
     const link = screen.getByRole('link', { name: messages.learnMore.defaultMessage }) as HTMLAnchorElement;
     expect(link).toBeInTheDocument();
-    expect(link.href).toContain('https://openedx.atlassian.net/wiki/spaces/ENG/pages/123456789/Cohorts+Feature+Documentation');
+    expect(link.href).toContain('https://docs.openedx.org/en/latest/educators/how-tos/advanced_features/manage_cohorts.html');
   });
 
   it('renders the enable cohorts button', () => {

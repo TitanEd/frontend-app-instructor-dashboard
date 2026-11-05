@@ -201,6 +201,16 @@ const messages = defineMessages({
     defaultMessage: '{countLearners} learners could not be added to this cohort.',
     description: 'Error message displayed when there is an issue adding learners to a cohort'
   },
+  addLearnersEmptyMessage: {
+    id: 'instruct.cohorts.addLearnersEmptyMessage',
+    defaultMessage: 'Enter at least one email address or username to add learners to this cohort.',
+    description: 'Error message displayed when the add learners button is clicked with no learners entered'
+  },
+  addLearnersRequestFailedMessage: {
+    id: 'instruct.cohorts.addLearnersRequestFailedMessage',
+    defaultMessage: 'The learners could not be added to this cohort. Please try again.',
+    description: 'Error message displayed when the request to add learners to a cohort fails'
+  },
   addLearnersWarningMessage: {
     id: 'instruct.cohorts.addLearnersWarningMessage',
     defaultMessage: '{countLearners} were pre-assigned for this cohort. This learner will automatically be added to the cohort when they enroll in the course.',
