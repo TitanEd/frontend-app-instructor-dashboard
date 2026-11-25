@@ -191,3 +191,66 @@ html body {
 .tsqd-parent-container {
   display: none !important;
 }
+
+// Top announcement banner (customHeaderExtras: .tels-announcements, first child of <body>,
+// outside #root). html/body don't scroll and the shell is 100vh tall, so the banner pushed the
+// bottom of the shell below the window and it could not be scrolled into view. While a banner is
+// shown, body is one window tall and the shell takes the room the banner leaves. The :has() chain
+// reaches the shell at any wrapper depth below #root.
+body:has(> .tels-announcements) {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+body:has(> .tels-announcements) > .tels-announcements {
+  flex: 0 0 auto;
+}
+
+body:has(> .tels-announcements) > #root,
+body:has(> .tels-announcements) #root div:has(.app-container) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+body:has(> .tels-announcements) .app-container {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+// TSD-92: Grading tools in dark mode. The TitanEd library styles disabled primary buttons with
+// dark orange text (--primary-alt) on grey at 65% opacity, and the tool descriptions use bright
+// text-primary, so both were hard to read. Dark mode only; light mode is unchanged.
+// This file is built into @layer app, so plain values need !important, and Paragon's
+// .text-primary (!important, earlier layer) is recoloured through its colour variable instead.
+// Fixed light values: Paragon's gray scale is inverted in dark mode, so gray tokens come out dark.
+html[data-paragon-theme-variant="dark"] body.tels-custom-instructor-dashboard {
+  .btn-primary:disabled,
+  .btn-primary.disabled {
+    color: #f3f4f6 !important;
+  }
+
+  .pgn__card p.text-primary {
+    // Paragon's .text-primary (an earlier CSS layer, !important) reads this token, so set it here.
+    --pgn-color-primary-base: #d1d5db;
+  }
+
+  // The per-tool descriptions use .text-primary-500 (same pattern, its own token).
+  .pgn__card p.text-primary-500 {
+    --pgn-color-primary-500: #d1d5db;
+  }
+}
+
+// TSD-111: same user-menu rules as HEADER_EXTRAS_STYLE in the other forks (keep the two in step).
+// !important: this file is built into @layer app, which loses to the unlayered brand rules otherwise.
+.header-container .usermenu-dropdown .dropdown-menu,
+.header-container .usermenu-dropdown-mobile .dropdown-menu { right: 0; left: auto; }
+html[data-paragon-theme-variant="dark"] .header-container .usermenu-dropdown .dropdown-menu,
+html[data-paragon-theme-variant="dark"] .header-container .usermenu-dropdown-mobile .dropdown-menu {
+  background-color: #1f2937 !important; border-color: rgba(255, 255, 255, .16) !important; box-shadow: 0 8px 24px rgba(0, 0, 0, .5) !important;
+}
+

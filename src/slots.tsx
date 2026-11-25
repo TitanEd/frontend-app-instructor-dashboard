@@ -4,7 +4,9 @@ import {
 import CourseInfoSlot from '@src/slots/CourseInfoSlot/CourseInfoSlot';
 import EnrollmentActionsSlot from '@src/slots/EnrollmentActionsSlot/EnrollmentActionsSlot';
 import TelsLayout from '@src/telsLayout/TelsLayout';
-import { appId, enrollmentActionsSlotId, enrollmentActionsWidgetId, instructorDashboardRole } from '@src/constants';
+import { appId, enrollmentActionsSlotId, enrollmentActionsWidgetId, instructorDashboardRole, instructorDashboardRoutesSlotId } from '@src/constants';
+import { TelsDashboardRoute } from '@src/telsLayout/dataDownloads/TelsDashboardRoute';
+import CustomDataDownloadsPage from '@src/telsLayout/dataDownloads/CustomDataDownloadsPage';
 
 const slots: SlotOperation[] = [
   // TitanEd header and left navigation instead of the site shell's layout, on this app's routes.
@@ -26,6 +28,13 @@ const slots: SlotOperation[] = [
     id: enrollmentActionsWidgetId,
     op: WidgetOperationTypes.APPEND,
     component: EnrollmentActionsSlot,
+  },
+  // TSD-129: TitanEd Data Downloads page (readable Date Generated) in place of the stock tab.
+  {
+    slotId: instructorDashboardRoutesSlotId,
+    id: 'org.openedx.frontend.widget.instructorDashboard.tels.dataDownloads',
+    op: WidgetOperationTypes.APPEND,
+    element: <TelsDashboardRoute tabId="data_downloads" content={<CustomDataDownloadsPage />} />,
   },
 ];
 
