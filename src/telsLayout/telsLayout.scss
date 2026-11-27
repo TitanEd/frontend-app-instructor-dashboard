@@ -254,3 +254,12 @@ html[data-paragon-theme-variant="dark"] .header-container .usermenu-dropdown-mob
   background-color: #1f2937 !important; border-color: rgba(255, 255, 255, .16) !important; box-shadow: 0 8px 24px rgba(0, 0, 0, .5) !important;
 }
 
+// Header menu toggle: after a click it keeps focus, and the brand (overrides/_buttons.scss,
+// unlayered !important) fills the circle with the primary colour and expects a white icon. The
+// TitanEd library's `.btn-icon:focus { color: var(--primary) !important }` (vendor index.css,
+// the same @layer app) kept the icon primary, so the icon vanished on its own fill. White icon on
+// the primary fill, as in the other MFEs.
+.header-container .toggle-sidebar-icon .btn-icon.btn-icon-primary:focus:not(:disabled) {
+  color: var(--pgn-color-text-inverse) !important;
+}
+
