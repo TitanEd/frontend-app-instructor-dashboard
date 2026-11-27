@@ -93,10 +93,14 @@ html body {
 }
 
 
-// The page and the site footer share the scrolling main area: the footer stays at its bottom.
+// The main area fills the space left below the header (and the announcement banner, when one
+// shows) instead of a fixed 100vh minus the header, so its last line can be scrolled into view.
+// No site footer, as in the other TitanEd MFEs.
 .tels-custom-instructor-dashboard .main-content {
   display: flex;
   flex-direction: column;
+  height: auto;
+  min-height: 0;
 
   .page-content {
     flex: 1 0 auto;

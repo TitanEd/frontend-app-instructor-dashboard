@@ -4,8 +4,8 @@
  *
  * It replaces the layout of the site shell (slot org.openedx.frontend.slot.layout.main.v1)
  * while a route of this app is active: see src/slots.tsx. The stock header is not rendered;
- * its course bar (masquerade bar, course tabs) and the site footer keep their slots, so
- * whatever the site puts there still shows.
+ * its course bar (masquerade bar, course tabs) keeps its slots, so whatever the site puts
+ * there still shows. The site footer is left out, as in the other TitanEd MFEs.
  */
 import { useEffect, useState } from 'react';
 
@@ -216,7 +216,6 @@ const TelsLayout = () => {
                 </div>
               </div>
             </div>
-            <Slot id="org.openedx.frontend.slot.footer.main.v1" />
           </div>
         </div>
       </SidebarProvider>
